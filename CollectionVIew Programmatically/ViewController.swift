@@ -7,7 +7,10 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController  {
+
+     var titles: [String] = []
+    var topLabel: UILabel!
     
      var collectionView: UICollectionView!
 
@@ -16,6 +19,18 @@ class ViewController: UIViewController {
         
         configureCollectionView()
         self.view.addSubview(collectionView)
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        
+        titles = [ "Hello", "This", "Is", "Carrington", "Practising", "IOS", "Programmatically"]
+        topLabel = UILabel()
+        topLabel.font = UIFont.systemFont(ofSize: 16)
+        topLabel.text  = "Tap the cell"
+        topLabel.sizeToFit()
+        topLabel.center.x = self.view.center.x
+        topLabel.frame.origin.y = 60
+        topLabel.textAlignment = .center
+        self.view.addSubview(topLabel)
     }
     
     func configureCollectionView() {
@@ -38,3 +53,45 @@ class ViewController: UIViewController {
 
 }
 
+extension ViewController:  UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return titles.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+        
+        cell.backgroundColor = .white
+        // Creating cell's label programmatically
+        let label = UILabel()
+        label.text = titles[indexPath.row]
+        label.font = UIFont.systemFont(ofSize: 18)
+        label.sizeToFit()
+        label.center = cell.contentView.center
+        cell.contentView.addSubview(label)
+        
+        return cell
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        //Creating size's coknstant (3 cells horizontally)
+        let size = self.view.frame.width / 3
+        return CGSize(width: size, height: size)
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        
+        // Assigning title from the [title array] object
+        topLabel.text = titles[indexPath.row]
+        topLabel.sizeToFit()
+        topLabel.center.x
+        = self.view.center.x
+        return true
+    }
+    
+    
+}
